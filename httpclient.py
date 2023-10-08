@@ -35,9 +35,6 @@ class HTTPResponse(object):
         self.code = code
         self.body = body
 
-    def header(self):
-        return self.body.split("\r\n\r\n")[0]
-
     def __str__(self):
         return str(self.code) + "\n" + self.body
 
@@ -64,8 +61,7 @@ class HTTPClient(object):
         return data.split("\r\n\r\n")[0]
 
     def get_body(self, data):
-        data = data.split("\r\n\r\n")[1]
-        return data
+        return data.split("\r\n\r\n")[1]
 
     def sendall(self, data):
         self.socket.sendall(data.encode("utf-8"))
@@ -93,9 +89,10 @@ class HTTPClient(object):
         socket = self.connect(host, port)
 
         # send and receive data
-        self.sendall(f"GET {url} HTTP/1.1\r\nHost: {host}\r\n\r\n")
+        self.sendall(
+            f"GET {url} HTTP/1.1\r\nHost: {host}\r\nAccept: */*\r\nConnection: Closed\r\n\r\n"
+        )
         data = self.recvall(socket)
-
         # process data
         code = self.get_code(data)
         body = self.get_body(data)
@@ -110,7 +107,7 @@ class HTTPClient(object):
 
         # make POST request with data
         tmp = ""
-        req = f"POST {url} HTTP/1.1\r\nHost: {host}\r\nContent-Type: application/x-www-form-urlencoded\r\n"
+        req = f"POST {url} HTTP/1.1\r\nHost: {host}\r\nAccept: */*\r\nConnection: Closed\r\nContent-Type: application/x-www-form-urlencoded\r\n"
         if args:
             for key, value in args.items():
                 tmp += f"{key}={value}&"
