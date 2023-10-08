@@ -36,7 +36,7 @@ class HTTPResponse(object):
         self.body = body
 
     def __str__(self):
-        return str(self.code) + "\n" + self.body
+        return "status code: " + str(self.code) + "\n" + "body:" + self.body
 
 
 class HTTPClient(object):
@@ -45,7 +45,10 @@ class HTTPClient(object):
         host = url.hostname
         port = url.port
         if port == None:
-            port = 80
+            if url.scheme == "https":
+                port = 443
+            else:
+                port = 80
         return host, port
 
     def connect(self, host, port):
@@ -139,4 +142,15 @@ if __name__ == "__main__":
     elif len(sys.argv) == 3:
         print(client.command(sys.argv[2], sys.argv[1]))
     else:
-        print(client.command(sys.argv[1]))
+        print(client.command(sys.argv[2], sys.argv[1], sys.argv[2:]))
+
+    # url = "http://ptsv3.com/t/jaf9230832/post"
+    # url1 = "http://httpbin.org/post"
+    # url2 = "http://webhook.site/51d0aa37-1f80-47e3-a654-76df4b7ea385"
+    # url3 = "http://webhook.site/51d0aa37-1f80-47e3-a654-76df4b7ea385/0d6c1932-e6d9-4d74-acee-868131ce63e2"
+    # # url = "https://httpbin.org/post"
+    # args = {
+    #     "RequestBody": "aaaaaaaaaaaaa",
+    # }
+    # print(client.GET(url3))
+    # print(client.POST(url2, args=args))
