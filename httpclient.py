@@ -107,7 +107,6 @@ class HTTPClient(object):
         body = ""
         host, port = self.get_host_port(url)
         socket = self.connect(host, port)
-        print("110: ", args)
 
         # make POST request with data
         tmp = ""
@@ -118,11 +117,8 @@ class HTTPClient(object):
         req += f"Content-Length: {len(tmp)}\r\n\r\n"
         req += tmp
 
-        print("118: ", req)
-
         self.sendall(req)
         data = self.recvall(socket)
-        # print("121: ", data)
         # process data
         code = self.get_code(data)
         body = self.get_body(data)
